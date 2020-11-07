@@ -35,7 +35,6 @@ simply do:
 * Lastly we terminate the [GLFW][glfw] itself.
 
 2. `graphic_pipeline.nim`
-
 This tutorial is the expansion from the first one. Here we define out shaders
 with `nimsl` and call those shaders into our program. The pipeline of drawing
 can be summarized as below:
@@ -49,6 +48,13 @@ can be summarized as below:
 * Get our attribute location, `aPos` (see notes above about naming), set it as `GL_FLOAT` (in Nim, we `GL_FLOAT` is identic with `GLfloat` so it's defined as `cGL_FLOAT`), and lastly enable it.
 * In our main loop, we will clear the color and buffer, and we draw with `glDrawArrays`, with `GL_TRIANGLE` as the primitive operation, the offset vertices is 0, and draw 3 vertices in our buffer vertices.
 * The rest of loop is same as the rest of loop mentioned at `startgflw.nim` above.
+
+3. `blink_triangle.nim`
+This notes file is extended from previous note (`graphic_pipeline.nim`), with
+the different only in part of adding `triangleColor` as uniform in fragment
+shader, and setting the color up to red by `glUniform3f`. Additionally, we are
+varying the value of red, with sinusiodal based on time elapsed.
+
 
 [open.gl]: https://open.gl
 [staticglfw]: https://github.com/treeform/staticglfw
