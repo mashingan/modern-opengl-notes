@@ -3,6 +3,7 @@ import sugar
 import staticglfw
 import opengl
 import nimsl/nimsl
+import nimPNG
 
 template `as`(a, b: untyped): untyped =
   cast[b](a)
@@ -18,12 +19,6 @@ var vertices = [
 var elements = [
   0'u32, 1, 2,
   2, 3, 0
-]
-
-# Black/white checkerboard
-var pixels = [
-  0'f32, 0, 0, 1, 1, 1,
-      1, 1, 1, 0, 0, 0
 ]
 
 proc myVertexShader(aTexcoord: Vec2, acol: Vec3, aPos: Vec2,
@@ -96,22 +91,6 @@ proc main =
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof elements, addr elements,
     GL_STATIC_DRAW)
   defer: glDeleteBuffers(1, addr ebo)
-
-  # texture buffer
-  var tex = 0'u32
-  glGenTextures(1, addr tex)
-  glBindTexture(GL_TEXTURE_2D, tex)
-  defer: glDeleteTextures(1, addr tex)
-
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB.GLint, 2, 2, 0, GL_RGB, cGL_FLOAT, addr pixels)
-  glGenerateMipmap(GL_TEXTURE_2D)
-  var texcols = [1'f32, 0, 0, 1] # red color border
-  glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, addr texcols[0])
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR)
 
   echo "compile vertex shader"
   var vxShades = myVertex.addr as cstringArray
@@ -196,6 +175,24 @@ proc main =
   # sampler2D by default already 0,0 so we don't have to add it anymore
   #var unitex = glGetUniformLocation(shaderProgram, "tex")
   #unitex.glUniform2f(0, 0)
+
+  # texture buffer
+  var tex = 0'u32
+  glGenTextures(1, addr tex)
+  glBindTexture(GL_TEXTURE_2D, tex)
+  defer: glDeleteTextures(1, addr tex)
+
+  var sample = loadPNG24("sample.png")
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB.GLint, GLsizei sample.width,
+    GLsizei sample.height, 0, GL_RGB, GL_UNSIGNED_BYTE, sample.data.cstring)
+  glGenerateMipmap(GL_TEXTURE_2D)
+  #var texcols = [1'f32, 0, 0, 1] # red color border
+  #glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, addr texcols[0])
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR)
 
   while windowShouldClose(window) == 0:
     glClearColor(0, 0, 0, 1)

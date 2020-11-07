@@ -14,6 +14,7 @@ Install the deps with
 nimble install staticglfw
 nimble install nimsl
 nimble install opengl
+nimble install nimPNG
 ```
 
 ## Lesson Notes
@@ -78,8 +79,13 @@ differ much with previous notes with only diff:
 6. `texture_using.nim`
 This notes is the initial notes for textures chapter. This also is extended
 previous notes with additional textures coordinates for each vertex and
-loading the texture with dummy pixel array values.
+loading the texture with dummy pixel array values. This notes also using
+manual written fragment shader instead of nimsl because the need of using
+GLSL builtin function `texture2D` and builtin data type `sampler2D`.
 
+7. `texture_filters.nim`
+This notes adds texture filter with using sample.png image which loaded using
+nimPNG. All other parts are same with previous notes.
 
 [open.gl]: https://open.gl
 [staticglfw]: https://github.com/treeform/staticglfw
