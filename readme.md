@@ -55,6 +55,17 @@ the different only in part of adding `triangleColor` as uniform in fragment
 shader, and setting the color up to red by `glUniform3f`. Additionally, we are
 varying the value of red, with sinusiodal based on time elapsed.
 
+4. `color_triangle.nim`
+Although the triangle is already colorised, this notes is actually giving
+the different color fragment shade for each vertex. The vertices definition
+using different RGB colors for each it's packed array definition. This notes
+also extended from previous notes (`blink_triangle.nim`) which used uniform
+variable shader. The different can be summarized below:
+
++ Getting color attribute from program.
+- Deleting the instance of getting uniform variable from program.
+- Deleting the dynamic uniform value set.
+
 
 [open.gl]: https://open.gl
 [staticglfw]: https://github.com/treeform/staticglfw
