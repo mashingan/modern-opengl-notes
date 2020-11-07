@@ -47,6 +47,14 @@ proc main =
   makeContextCurrent window
   loadExtensions()
 
+  # setup vertex array object (VAO) for fast vertices switching
+  # everytime calling glVertexAttribPointer.
+  # This must be set first before we call glVertexAttribPointer if not
+  # we will get GL_INVALID_OPERATION.
+  var vao = 0'u32
+  glGenVertexArrays(1, addr vao)
+  vao.glBindVertexArray
+
   var vbo = 0'u32
   glGenBuffers(1, addr vbo)
   glBindBuffer(GL_ARRAY_BUFFER, vbo)
@@ -81,14 +89,6 @@ proc main =
 
   glLinkProgram shaderProgram
   glUseProgram shaderProgram
-
-  # setup vertex array object (VAO) for fast vertices switching
-  # everytime calling glVertexAttribPointer.
-  # This must be set first before we call glVertexAttribPointer if not
-  # we will get GL_INVALID_OPERATION.
-  var vao = 0'u32
-  glGenVertexArrays(1, addr vao)
-  vao.glBindVertexArray
 
   # in original tutorial, the "position" has in/attribute in it's declaration,
   # however using nimsl the only working variable is "aPos" as attribute
