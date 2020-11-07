@@ -75,6 +75,11 @@ differ much with previous notes with only diff:
 * Adding elements buffer (`ebo` variable) for keeping the `elements` variable.
 * Changing the GL draw method from `glDrawArrays` to `glDrawElements`
 
+6. `texture_using.nim`
+This notes is the initial notes for textures chapter. This also is extended
+previous notes with additional textures coordinates for each vertex and
+loading the texture with dummy pixel array values.
+
 
 [open.gl]: https://open.gl
 [staticglfw]: https://github.com/treeform/staticglfw
