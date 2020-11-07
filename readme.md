@@ -62,9 +62,18 @@ using different RGB colors for each it's packed array definition. This notes
 also extended from previous notes (`blink_triangle.nim`) which used uniform
 variable shader. The different can be summarized below:
 
-+ Getting color attribute from program.
-- Deleting the instance of getting uniform variable from program.
-- Deleting the dynamic uniform value set.
+* Getting color attribute from program.
+* Deleting the instance of getting uniform variable from program.
+* Deleting the dynamic uniform value set.
+
+5. `element_square.nim`
+This notes is the continuation of drawing chapter. This notes emphasizes the
+the usages of elements together with vertices array. In most code, this doesn't
+differ much with previous notes with only diff:
+
+* Adding `elements` variable which define the order of rendering.
+* Adding elements buffer (`ebo` variable) for keeping the `elements` variable.
+* Changing the GL draw method from `glDrawArrays` to `glDrawElements`
 
 
 [open.gl]: https://open.gl
