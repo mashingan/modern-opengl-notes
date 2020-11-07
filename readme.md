@@ -8,11 +8,12 @@ In this notes, I use excellent Nim package [staticglfw][staticglfw] for
 [GLFW][glfw] setup and package [nimsl][nimsl] for shader DSL instead of
 textual representation.
 
-Install both with
+Install the deps with
 
 ```
 nimble install staticglfw
 nimble install nimsl
+nimble install opengl
 ```
 
 
