@@ -8,9 +8,9 @@ template `as`(a, b: untyped): untyped =
   cast[b](a)
 
 var vertices = [
-  0'f32, 0.5,  # vertex 1: Red
-  0.5, -0.5,   # vertex 2: Green
-  -0.5, -0.5   # vertex 3: Blue
+  0'f32, 0.5,  # vertex 1
+  0.5, -0.5,   # vertex 2
+  -0.5, -0.5   # vertex 3
 ]
 
 proc myVertexShader(aPos: Vec2): Vec4 =
