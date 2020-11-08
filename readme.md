@@ -15,6 +15,7 @@ nimble install staticglfw
 nimble install nimsl
 nimble install opengl
 nimble install nimPNG
+nimble install nim-glm
 ```
 
 ## Lesson Notes
@@ -95,6 +96,12 @@ set the texture with `glUniform1i`. This is worthy of note that the GLSL
 compiler will optimize away the unused variables and will remove the link and
 its variable itself if the attribute variable is not used.
 
+9. `transform_rotate.nim`
+This is the first notes of transform chapter. We reuse the almost same code
+from the previous `texture_units.nim` but without the color attribute and
+without using `nimsl` because it clashes with various definitions from `nim-glm`
+package. We apply the transformation into uniform `trans` variable in vertex
+shader as the `gl_Position` value.
 [open.gl]: https://open.gl
 [staticglfw]: https://github.com/treeform/staticglfw
 [glfw]: https://www.glfw.org
