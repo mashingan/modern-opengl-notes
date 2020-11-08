@@ -15,7 +15,7 @@ nimble install staticglfw
 nimble install nimsl
 nimble install opengl
 nimble install nimPNG
-nimble install nim-glm
+nimble install glm
 ```
 
 ## Lesson Notes
@@ -102,6 +102,12 @@ from the previous `texture_units.nim` but without the color attribute and
 without using `nimsl` because it clashes with various definitions from `nim-glm`
 package. We apply the transformation into uniform `trans` variable in vertex
 shader as the `gl_Position` value.
+
+10. `transform_rotate3d.nim`
+The continuation notes, this time in addition to explain the perspective
+and projection of camera view and world, we also spice up with animated
+blending from the exercise in the previous chapter (texture chapter).
+
 [open.gl]: https://open.gl
 [staticglfw]: https://github.com/treeform/staticglfw
 [glfw]: https://www.glfw.org
