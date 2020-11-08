@@ -120,6 +120,15 @@ will see our cube rendered as hollow cube, but it becomes solid boxed cube
 after we enable it. The vertices representation also adds `Z` in the position
 coordinate so we change our shader from `vec2` to `vec3`.
 
+12. `depthstencil_cubereflect.nim`
+As usual, this time we continue the previous notes with additional reflection
+cube and a planar surface. The planar vertices are added in existing `vertices`
+array so we draw it 6 vertices with offset of 36 vertices
+(`glDrawArrays(GL_TRIANGLES, 36, 6)`). As the reflected cube, we transform it
+to below in Z axis, and then scale it with each vector direction
+(`vec3(1, 1, -1)`). Lastly we draw the all vertices cube again for the reflected
+cube.
+
 [open.gl]: https://open.gl
 [staticglfw]: https://github.com/treeform/staticglfw
 [glfw]: https://www.glfw.org
