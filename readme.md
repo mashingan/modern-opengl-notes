@@ -87,6 +87,14 @@ GLSL builtin function `texture2D` and builtin data type `sampler2D`.
 This notes adds texture filter with using sample.png image which loaded using
 nimPNG. All other parts are same with previous notes.
 
+8. `texture_units.nim`
+This is almost same with previous with additional of 2 textures which mixed
+together halfly on each other. With `glActiveTexture`, we choose which texture
+we want to use. We also make both of texture as uniform vec2 variables and
+set the texture with `glUniform1i`. This is worthy of note that the GLSL
+compiler will optimize away the unused variables and will remove the link and
+its variable itself if the attribute variable is not used.
+
 [open.gl]: https://open.gl
 [staticglfw]: https://github.com/treeform/staticglfw
 [glfw]: https://www.glfw.org
