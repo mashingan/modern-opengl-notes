@@ -108,6 +108,18 @@ The continuation notes, this time in addition to explain the perspective
 and projection of camera view and world, we also spice up with animated
 blending from the exercise in the previous chapter (texture chapter).
 
+11. `depthstencil_cubed.nim`
+This notes is the first notes in chapter of depth buffer and stencil buffer.
+Taking the base of notes from previous lesson, this notes changes the vertices
+to represent the cubed surfaces area in 36 vertices. We also change back the
+drawing method from `glDrawElements` to `glDrawArrays` as the vertices
+representation is reverted back to simple vertices.  
+What also changed is the camera position from `1.2, 1.2, 1.2` to `2.5, 2.5, 2.0`
+to get better view of our cube surface. Without `glEnable(GL_DEPTH_TEST)`, we
+will see our cube rendered as hollow cube, but it becomes solid boxed cube
+after we enable it. The vertices representation also adds `Z` in the position
+coordinate so we change our shader from `vec2` to `vec3`.
+
 [open.gl]: https://open.gl
 [staticglfw]: https://github.com/treeform/staticglfw
 [glfw]: https://www.glfw.org
