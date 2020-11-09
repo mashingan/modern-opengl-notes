@@ -129,6 +129,17 @@ to below in Z axis, and then scale it with each vector direction
 (`vec3(1, 1, -1)`). Lastly we draw the all vertices cube again for the reflected
 cube.
 
+13. `depthstencil_reflectsurface.nim`
+As the continuation from previous, this time we enable the `GL_STENCIL_TEST` to
+as its the extension of depth buffer for control over which fragments drawn.
+Using stencil buffer, we only draw the needed areas when those stencil values are
+1. We disable depth buffer drawing when drawing the floor surface, after we
+saved our stencil buffer to only draw the necessary part.  
+The second part is the reflection. We reflect our original model cube into reflection cube
+model but this time we enable drawing depth buffer. We add a color mask of
+`vec3f(0.3, 0.3, 0.3)` to darken the floor surface reflection and after drawing it,
+we restore the color mask to `vec3f(1, 1, 1)` (identity vector) to make it normal.
+
 [open.gl]: https://open.gl
 [staticglfw]: https://github.com/treeform/staticglfw
 [glfw]: https://www.glfw.org
