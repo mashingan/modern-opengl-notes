@@ -140,7 +140,7 @@ model but this time we enable drawing depth buffer. We add a color mask of
 `vec3f(0.3, 0.3, 0.3)` to darken the floor surface reflection and after drawing it,
 we restore the color mask to `vec3f(1, 1, 1)` (identity vector) to make it normal.
 
-14. `framebuffer_inits.nim`
+14. `framebuffers_inits.nim`
 This time the example a bit involved especially with the necessary refactor
 for needed handle object to its own object type. With `initScene` we immediately
 generate the vertex and buffer array, we also compile the vertex and fragment
@@ -151,6 +151,10 @@ Apart from the big refactor, in this notes example, we define our framebuffers
 and its render buffer which we draw it after we finished drawing our cube,
 its reflection and also the floor. Except for initializing those buffers,
 it's no different than previous notes.
+
+15. `framebuffers_colors.nim`
+This notes only plays with different framebuffers color for post-processing. The
+frame is drawn in grayscale which multiplied to weighted channels.
 
 [open.gl]: https://open.gl
 [staticglfw]: https://github.com/treeform/staticglfw
