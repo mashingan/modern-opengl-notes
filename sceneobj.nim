@@ -122,3 +122,20 @@ template activateAttrib*(scene: Scene, size, row, skip: int32,
     skipcount = (skip * sizeof(float32)) as pointer
   glVertexAttribPointer(varAttrib.GLuint, size, cGL_FLOAT, GL_FALSE,
     rowsize, skipcount)
+
+proc useFramebuffer*(fb: uint32) =
+  glBindFramebuffer GL_FRAMEBUFFER, fb
+
+proc drawBufferTexture*(texture, stencil: uint32) =
+  glBindTexture GL_TEXTURE_2D, texture
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB.GLint, 800, 600, 0, GL_RGB,
+    GL_UNSIGNED_BYTE, nil)
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
+
+  glBindRenderbuffer GL_RENDERBUFFER, stencil
+  glRenderbufferStorage GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 800, 600
+  glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
+    GL_RENDERBUFFER, stencil)
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+    GL_TEXTURE_2D, texture, 0)

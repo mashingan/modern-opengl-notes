@@ -224,26 +224,17 @@ proc main =
   defer: glDeleteFramebuffers(1, addr frameBuffer)
 
   # Bind our frameBuffer
-  glBindFramebuffer GL_FRAMEBUFFER, frameBuffer
+  useFramebuffer frameBuffer
 
   var texColorBuffer = 0'u32
   glGenTextures 1, addr texColorBuffer
   defer: glDeleteTextures(1, addr texColorBuffer)
-  glBindTexture GL_TEXTURE_2D, texColorBuffer
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB.GLint, 800, 600, 0, GL_RGB,
-    GL_UNSIGNED_BYTE, nil)
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
 
   var rboDepthStencil = 0'u32
   glGenRenderbuffers(1, addr rboDepthStencil)
   defer: glDeleteRenderbuffers(1, addr rboDepthStencil)
-  glBindRenderbuffer GL_RENDERBUFFER, rboDepthStencil
-  glRenderbufferStorage GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 800, 600
-  glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
-    GL_RENDERBUFFER, rboDepthStencil)
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-    GL_TEXTURE_2D, texColorBuffer, 0)
+
+  texColorBuffer.drawBufferTexture rboDepthStencil
 
   var reflection = model
   let start = cpuTime()
