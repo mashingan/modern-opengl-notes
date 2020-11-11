@@ -156,6 +156,10 @@ it's no different than previous notes.
 This notes only plays with different framebuffers color for post-processing. The
 frame is drawn in grayscale which multiplied to weighted channels.
 
+16. `framebuffers_blur.nim`
+This notes also playes with blurring our image with average of `blurSize` for each
+texture coordinate.
+
 [open.gl]: https://open.gl
 [staticglfw]: https://github.com/treeform/staticglfw
 [glfw]: https://www.glfw.org
