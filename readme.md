@@ -160,6 +160,10 @@ frame is drawn in grayscale which multiplied to weighted channels.
 This notes also playes with blurring our image with average of `blurSize` for each
 texture coordinate.
 
+17. `framebuffers_edgedetect.nim`
+This notes displays different post-processing effect which often used as edge
+detection around the color texture.
+
 [open.gl]: https://open.gl
 [staticglfw]: https://github.com/treeform/staticglfw
 [glfw]: https://www.glfw.org
