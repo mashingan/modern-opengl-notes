@@ -5,8 +5,7 @@ import opengl
 import nimPNG
 import glm
 
-template `as`(a, b: untyped): untyped =
-  cast[b](a)
+import sceneobj
 
 var vertices = [
  -0.5'f32, -0.5, -0.5, 1.0, 1.0, 1.0, 0.0, 0.0,
@@ -107,20 +106,6 @@ void main() {
 dump myvertex
 dump myFragment
 
-template checkShaderCompileStatus(shader: GLuint) =
-  var errnum = glGetError()
-  echo "catched error: ", errnum.int
-  var status = 0'i32
-  glGetShaderiv(shader, GL_COMPILE_STATUS, addr status)
-  if GLBoolean(status) != GL_TRUE:
-    var buf: cstring = newString(512)
-    var length = 0'i32
-    glGetShaderInfoLog(vertexShader, 512, addr length, buf)
-    echo "failed shader compilation"
-    if length > 0:
-      echo buf
-    return
-
 proc main =
   if init() == 0:
     raise newException(Exception, "Failed to initialize GLFW")
@@ -138,17 +123,12 @@ proc main =
     window.destroyWindow
     terminate()
 
-  var vao = 0'u32
-  glGenVertexArrays(1, addr vao)
-  vao.glBindVertexArray
-  defer: glDeleteVertexArrays(1, addr vao)
-
-  # vertex array buffer
-  var vbo = 0'u32
-  glGenBuffers(1, addr vbo)
-  glBindBuffer(GL_ARRAY_BUFFER, vbo)
-  glBufferData(GL_ARRAY_BUFFER, sizeof vertices, addr vertices, GL_STATIC_DRAW)
-  defer: glDeleteBuffers(1, addr vbo)
+  var scene = initScene(sizeof vertices, addr vertices, "outColor", myVertex, myFragment)
+  scene.useProgram
+  scene.useVao
+  scene.useVbo
+  var shaderProgram = scene.program
+  dump scene
 
   # element buffer
   var ebo = 0'u32
@@ -158,109 +138,17 @@ proc main =
     GL_STATIC_DRAW)
   defer: glDeleteBuffers(1, addr ebo)
 
-  echo "compile vertex shader"
-  var vxShades = myVertex.addr as cstringArray
-  var vertexShader = glCreateShader(GL_VERTEX_SHADER)
-  if vertexShader.glIsShader == GL_FALSE:
-    echo "cannot create vertex shader"
-    return
-  glShaderSource(vertexShader, 1, vxShades, nil)
-  glCompileShader(vertexShader)
-
-  # check if shader compiled succesfully
-  checkShaderCompileStatus vertexShader
-  echo "vertex shader compiled"
-  defer: vertexShader.glDeleteShader
-
-  echo "compile fragment shader"
-  var fgShades = myFragment.addr as cstringArray
-  var fragmentShader = glCreateShader(GL_FRAGMENT_SHADER)
-  if fragmentShader.glIsShader == GL_FALSE:
-    echo "cannot create fragment shader"
-    return
-  glShaderSource(fragmentShader, 1, fgShades, nil)
-  glCompileShader(fragmentShader)
-
-  # check if shader compiled succesfully
-  checkShaderCompileStatus fragmentShader
-  echo "fragment shader compiled"
-  defer: fragmentShader.glDeleteShader
-
-  var shaderProgram = glCreateProgram()
-  shaderProgram.glAttachShader vertexShader
-  shaderProgram.glAttachShader fragmentShader
-  defer: shaderProgram.glDeleteProgram
-
-  glLinkProgram shaderProgram
-  glUseProgram shaderProgram
-
-  let rowsize: GLint = 8 * sizeof(float32)
-  echo "pos attrib"
-  var posAttrib = glGetAttribLocation(shaderProgram, "aPos")
-  dump posAttrib
-  dump posAttrib.GLuint
-  if posAttrib < 0:
-    echo "invalid pos attribute"
-    return
-  posAttrib.GLuint.glEnableVertexAttribArray
-  glVertexAttribPointer(posAttrib.GLuint, 3, cGL_FLOAT, GL_FALSE,
-    rowsize, nil)
-
-  echo "color attrib"
-  var colAttrib = glGetAttribLocation(shaderProgram, "acol")
-  dump colAttrib
-  dump colAttrib.GLuint
-  if colAttrib < 0:
-    echo "invalid col attrib"
-    return
-  colAttrib.GLuint.glEnableVertexAttribArray
-  glVertexAttribPointer(colAttrib.GLuint, 3, cGL_FLOAT, GL_FALSE,
-    rowsize, (3 * sizeof(float32)) as pointer)
-  
-  echo "tex attrib"
-  var texAttrib = glGetAttribLocation(shaderProgram, "aTexcoord")
-  dump texAttrib
-  dump texAttrib.GLuint
-  if texAttrib < 0:
-    echo "invalid texture attribute"
-    return
-  var skipsize = 6 * sizeof(float32)
-  texAttrib.GLuint.glEnableVertexAttribArray
-  glVertexAttribPointer(texAttrib.GLuint, 2, cGL_FLOAT, GL_FALSE,
-    rowsize, skipsize as pointer)
+  scene.activateAttrib(size = 3, row = 8, skip = 0, "aPos")
+  scene.activateAttrib(size = 3, row = 8, skip = 3, "acol")
+  scene.activateAttrib(size = 2, row = 8, skip = 6, "aTexcoord")
 
   # texture buffer
   var texs = [0'u32, 0]
   glGenTextures(2, addr texs[0])
   defer: glDeleteTextures(2, addr texs[0])
 
-  glActiveTexture(GL_TEXTURE0)
-  glBindTexture(GL_TEXTURE_2D, texs[0])
-  var sample = loadPNG24("sample.png")
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB.GLint, GLsizei sample.width,
-    GLsizei sample.height, 0, GL_RGB, GL_UNSIGNED_BYTE, sample.data.cstring)
-  glUniform1i(glGetUniformLocation(shaderProgram, "texKitten"), 0)
-  glGenerateMipmap(GL_TEXTURE_2D)
-  #var texcols = [1'f32, 0, 0, 1] # red color border
-  #glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, addr texcols[0])
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR)
-
-  glActiveTexture(GL_TEXTURE1)
-  glBindTexture(GL_TEXTURE_2D, texs[1])
-  sample = loadPNG24("sample2.png")
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB.GLint, GLsizei sample.width,
-    GLsizei sample.height, 0, GL_RGB, GL_UNSIGNED_BYTE, sample.data.cstring)
-  glUniform1i(glGetUniformLocation(shaderProgram, "texPuppy"), 1)
-  glGenerateMipmap(GL_TEXTURE_2D)
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR)
+  scene.loadTexture("sample.png", "texKitten", texs[0], GL_TEXTURE0)
+  scene.loadTexture("sample2.png", "texPuppy", texs[1], GL_TEXTURE1)
 
   var unimodel = glGetUniformLocation(shaderProgram, "model")
   var model = mat4f(1).rotate(radians(180'f32), vec3f(0, 0, 1))
