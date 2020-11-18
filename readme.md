@@ -181,6 +181,10 @@ This notes is extension of previous one, by manually creating a pair of original
 coordinate and new coordinate based on original coordinate's quadrant. We draw it
 clock-wise from quadrant 4 `(x, y) = (-0.5, 0.5)`.
 
+21. `geometryshader_vertexattributes.nim`
+This time we add color for each coordinate vertex and assign it first to geometry shader
+before passing it to fragment shader.
+
 [open.gl]: https://open.gl
 [staticglfw]: https://github.com/treeform/staticglfw
 [glfw]: https://www.glfw.org
