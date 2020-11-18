@@ -164,6 +164,11 @@ texture coordinate.
 This notes displays different post-processing effect which often used as edge
 detection around the color texture.
 
+18. `geometryshader_setup.nim`
+This notes we create a basic geometry shader based on points we defined in variable
+`points`. We render each point as red as define in fragment shader in variable
+`outColor`.
+
 [open.gl]: https://open.gl
 [staticglfw]: https://github.com/treeform/staticglfw
 [glfw]: https://www.glfw.org
