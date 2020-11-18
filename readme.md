@@ -169,6 +169,18 @@ This notes we create a basic geometry shader based on points we defined in varia
 `points`. We render each point as red as define in fragment shader in variable
 `outColor`.
 
+19. `geometryshader_layouts.nim`
+This notes is using a special geometry shader hence we have to modify the `initScene`
+to accomodate the shader with specific `GLEnum` of `GL_GEOMETRY_SHADER`. This
+notes specifically create a new two vertices position and draw a line between these
+new positions. It's relative to our input position from `x += -1` and `x += 1`.
+So we get each of coordinate will draw a simple horizontal line.
+
+20. `geometryshader_rectangles.nim`
+This notes is extension of previous one, by manually creating a pair of original
+coordinate and new coordinate based on original coordinate's quadrant. We draw it
+clock-wise from quadrant 4 `(x, y) = (-0.5, 0.5)`.
+
 [open.gl]: https://open.gl
 [staticglfw]: https://github.com/treeform/staticglfw
 [glfw]: https://www.glfw.org

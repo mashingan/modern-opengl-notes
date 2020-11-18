@@ -25,6 +25,7 @@ type
     vbo*: uint32
     vshader*: uint32
     fshader*: uint32
+    gshader*: uint32
     program*: uint32
 
 template ok*(test, body: untyped) =
@@ -36,6 +37,7 @@ proc `=destroy`*(scene: var Scene) =
   scene.vbo.ok: glDeleteBuffers 1, addr scene.vbo
   scene.vshader.ok: glDeleteShader scene.vshader
   scene.vshader.ok: glDeleteShader scene.fshader
+  scene.gshader.ok: glDeleteShader scene.gshader
   scene.program.ok: glDeleteProgram scene.program
 
 proc compileShader*(vertexShader: var cstring, mode = GL_VERTEX_SHADER): uint32 =
@@ -54,7 +56,7 @@ proc compileShader*(vertexShader: var cstring, mode = GL_VERTEX_SHADER): uint32 
   echo fmt"{msgwhich} shader compiled"
 
 proc initScene*(verticeSize: int, verticeAddr: pointer, outColor = "",
-  vertexShader, fragmentShader: var cstring): Scene =
+  vertexShader, fragmentShader, geometryShader: var cstring): Scene =
   glGenVertexArrays(1, addr result.vao)
   glBindVertexArray result.vao
 
@@ -63,12 +65,17 @@ proc initScene*(verticeSize: int, verticeAddr: pointer, outColor = "",
   glBufferData(GL_ARRAY_BUFFER, verticeSize, verticeAddr,
     GL_STATIC_DRAW)
 
-  result.vshader = compileShader vertexShader
-  result.fshader = compileShader(fragmentShader, GL_FRAGMENT_SHADER)
-
   result.program = glCreateProgram()
-  result.program.glAttachShader result.vshader
-  result.program.glAttachShader result.fshader
+  if vertexShader != "":
+    result.vshader = compileShader vertexShader
+    result.program.glAttachShader result.vshader
+  if fragmentShader != "":
+    result.fshader = compileShader(fragmentShader, GL_FRAGMENT_SHADER)
+    result.program.glAttachShader result.fshader
+  if geometryShader != "":
+    result.gshader = compileShader(geometryShader, GL_GEOMETRY_SHADER)
+    result.program.glAttachShader result.gshader
+
   if outColor != "":
     result.program.glBindFragDataLocation(0, "outColor")
 
