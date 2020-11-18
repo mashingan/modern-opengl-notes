@@ -202,10 +202,11 @@ proc main =
     window.destroyWindow
     terminate()
 
+  var dgeo = cstring ""
   var screen = initScene(sizeof quadVertices, addr quadVertices, "outColor",
-    shader2Dvertex, shader2Dfragment)
+    shader2Dvertex, shader2Dfragment, dgeo)
   var scene = initScene(sizeof vertices, addr vertices, "outColor",
-    myVertex, myFragment)
+    myVertex, myFragment, dgeo)
 
   # element buffer
   var ebo = 0'u32

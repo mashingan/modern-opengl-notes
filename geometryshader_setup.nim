@@ -48,8 +48,9 @@ proc main =
 
   dump sizeof(points)
   dump (addr points).repr
+  var dgeo = cstring ""
   var scene = initScene(sizeof points, addr points, "outColor",
-    myVertex, myFragment)
+    myVertex, myFragment, dgeo)
 
   scene.activateAttrib(size = 2, row = 0, skip = 0, "pos")
 
