@@ -185,6 +185,10 @@ clock-wise from quadrant 4 `(x, y) = (-0.5, 0.5)`.
 This time we add color for each coordinate vertex and assign it first to geometry shader
 before passing it to fragment shader.
 
+22. `geometryshader_dynamics.nim`
+This notes we draw vertices dynamically which defined with `sides` variable attribute
+and pass it to the geometry shaders to calculate the angle based on sides we provide.
+
 [open.gl]: https://open.gl
 [staticglfw]: https://github.com/treeform/staticglfw
 [glfw]: https://www.glfw.org
