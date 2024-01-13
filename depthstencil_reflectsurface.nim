@@ -123,7 +123,8 @@ proc main =
     window.destroyWindow
     terminate()
 
-  var scene = initScene(sizeof vertices, addr vertices, "outColor", myVertex, myFragment)
+  var empty = cstring ""
+  var scene = initScene(sizeof vertices, addr vertices, "outColor", myVertex, myFragment, empty)
   scene.useProgram
   scene.useVao
   scene.useVbo

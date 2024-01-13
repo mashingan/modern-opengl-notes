@@ -3,6 +3,7 @@ import sugar
 import staticglfw
 import opengl
 import nimsl/nimsl
+import sceneobj
 
 template `as`(a, b: untyped): untyped =
   cast[b](a)
@@ -20,21 +21,11 @@ proc myVertexShader(proj: Mat4, aPos: Vec2, vPos: var Vec2): Vec4 =
 proc myFragmentShader(vPos: Vec2): Vec4 =
   result = newVec4(1, 1, 1, 1)
 
-var myVertex: cstring = getGLSLVertexShader(myVertexShader)
-var myFragment: cstring = getGLSLFragmentShader(myFragmentShader)
+var myVertex = cstring getGLSLVertexShader(myVertexShader)
+var myFragment = cstring getGLSLFragmentShader(myFragmentShader)
 
 dump myvertex
 dump myFragment
-
-template checkShaderCompileStatus(shader: GLuint) =
-  var status = 0'i32
-  glGetShaderiv(shader, GL_COMPILE_STATUS, addr status)
-  if GLBoolean(status) != GL_TRUE:
-    var buf: cstring = ""
-    var length = 0'i32
-    glGetShaderInfoLog(vertexShader, 512, addr length, buf)
-    echo buf
-    return
 
 proc main =
   if init() == 0:

@@ -4,6 +4,7 @@ import staticglfw
 import opengl
 import nimsl/nimsl
 import nimPNG
+import sceneobj
 
 template `as`(a, b: untyped): untyped =
   cast[b](a)
@@ -30,9 +31,9 @@ proc myVertexShader(aTexcoord: Vec2, acol: Vec3, aPos: Vec2,
 proc myFragmentShader(tex: Vec2, vColor: Vec3, vTexcoord: Vec2): Vec4 =
   result = newVec4(tex, vTexcoord) * newVec4(vColor[0], vColor[1], vColor[2], 1)
 
-var myVertex: cstring = getGLSLVertexShader(myVertexShader)
+var myVertex = cstring getGLSLVertexShader(myVertexShader)
 #var myFragment: cstring = getGLSLFragmentShader(myFragmentShader)
-var myFragment: cstring = """
+var myFragment = cstring """
 #version 330 core
 in vec3 vColor;
 in vec2 vTexcoord;
@@ -43,15 +44,6 @@ void main() { gl_FragColor = texture2D(tex, vTexcoord) * vec4(vColor, 1.0); }
 dump myvertex
 dump myFragment
 
-template checkShaderCompileStatus(shader: GLuint) =
-  var status = 0'i32
-  glGetShaderiv(shader, GL_COMPILE_STATUS, addr status)
-  if GLBoolean(status) != GL_TRUE:
-    var buf: cstring = newString(512)
-    var length = 0'i32
-    glGetShaderInfoLog(vertexShader, 512, addr length, buf)
-    echo buf
-    return
 
 proc main =
   if init() == 0:

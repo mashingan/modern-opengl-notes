@@ -4,6 +4,7 @@ import staticglfw
 import opengl
 import nimPNG
 import glm
+import sceneobj
 
 template `as`(a, b: untyped): untyped =
   cast[b](a)
@@ -104,20 +105,6 @@ void main() {
 
 dump myvertex
 dump myFragment
-
-template checkShaderCompileStatus(shader: GLuint) =
-  var errnum = glGetError()
-  echo "catched error: ", errnum.int
-  var status = 0'i32
-  glGetShaderiv(shader, GL_COMPILE_STATUS, addr status)
-  if GLBoolean(status) != GL_TRUE:
-    var buf: cstring = newString(512)
-    var length = 0'i32
-    glGetShaderInfoLog(vertexShader, 512, addr length, buf)
-    echo "failed shader compilation"
-    if length > 0:
-      echo buf
-    return
 
 proc main =
   if init() == 0:

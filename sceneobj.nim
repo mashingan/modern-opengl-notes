@@ -11,7 +11,7 @@ template checkShaderCompileStatus*(shader: GLuint) =
   var status = 0'i32
   glGetShaderiv(shader, GL_COMPILE_STATUS, addr status)
   if GLBoolean(status) != GL_TRUE:
-    var buf: cstring = newString(512)
+    var buf = cstring newString(512)
     var length = 0'i32
     glGetShaderInfoLog(shader, 512, addr length, buf)
     echo "failed shader compilation"
